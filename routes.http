@@ -1,0 +1,12 @@
+# POST http://localhost:3333/adverts
+# Content-Type: application/json
+
+# {
+#     "title": "advert 01",
+#     "description": "first advert",
+#     "price": "0"
+# }
+
+# ###
+
+# GET http://localhost:3333/adverts
