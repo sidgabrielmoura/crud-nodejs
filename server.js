@@ -1,52 +1,52 @@
-import { fastify } from 'fastify'
-import { DatabasePostgres } from './database-postgres.js'
+import { fastify } from "fastify";
+import cors from "@fastify/cors";
+import { DatabasePostgres } from "./database-postgres.js";
 
-const server = fastify()
+const server = fastify();
 
-const database = new DatabasePostgres()
+await server.register(cors, {
+  origin: true,
+});
 
-server.post('/adverts', async (request, reply) => {
-    const { title, description, price } = request.body
+const database = new DatabasePostgres();
 
-    await database.create({
-        title,
-        description,
-        price,
-    })
+server.post("/adverts", async (request, reply) => {
+  const payLoad = JSON.parse(request.body);
 
-    return reply.status(201).send()
-})
+  console.log(request.body);
 
-server.get('/adverts', async (request, reply) => {
-    const videos = await database.list()
+  await database.create(payLoad);
 
-    console.log(videos)
+  return reply.status(201).send(payLoad);
+});
 
-    return videos
-})
+server.get("/adverts", async () => {
+  const adverts = await database.list();
+  return adverts;
+});
 
-server.put('/adverts/:id', async (request, reply) => {
-    const advertId = request.params.id
-    const { title, description, price } = request.body
+server.put("/adverts/:id", async (request, reply) => {
+  const advertId = request.params.id;
+  const { title, description, price } = request.body;
 
-    await database.update(advertId, {
-        title,
-        description,
-        price
-    })
+  await database.update(advertId, {
+    title,
+    description,
+    price,
+  });
 
-    return reply.status(204).send()
-})
+  return reply.status(204).send();
+});
 
-server.delete('/adverts/:id', (request, reply) => {
-    const advertId = request.params.id
-    
-    database.delete(advertId)
+server.delete("/adverts/:id", (request, reply) => {
+  const advertId = request.params.id;
 
-    return reply.status(204).send()
-})
+  database.delete(advertId);
+
+  return reply.status(204).send();
+});
 
 server.listen({
-    host: '0.0.0.0',
-    port: process.env.PORT ?? 3333
-})
+  host: "0.0.0.0",
+  port: process.env.PORT ?? 3333,
+});
