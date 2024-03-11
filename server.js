@@ -22,6 +22,7 @@ server.post("/adverts", async (request, reply) => {
 
 server.get("/adverts", async () => {
   const adverts = await database.list();
+  console.log(adverts)
   return adverts;
 });
 

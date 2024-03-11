@@ -2,7 +2,10 @@ import { sql } from "./db.js"
 import { randomUUID } from "crypto"
 
 export class DatabasePostgres{
-    list(){}
+    async list(){
+        const dados = await sql`select * from adverts`
+        return dados
+    }
 
     async create(advert){
         const advertId = randomUUID()
